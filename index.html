@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="batchFileRenamer.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="main">
+            <fieldset>
+            <legend>Files</legend>
+                <div id="fileSelectDiv">
+                    <nav>
+                        <button id="chooseDirectoryButton">Choose Directory</button>
+                    </nav>
+                    Path: <input type="text" id="filePathInput" readonly />
+                </div>
+                <div id="fileListDiv"></div>
+            </fieldset>
+            <fieldset>
+            <legend>Options</legend>
+                <p id="optionsLoadingP"><em>Loading</em></p>
+                <div id="optionsDiv">
+                    <div class="optionLine">
+                        Extension filter:
+                        <input type="text" name="extFilter" id="extFilter" />
+                    </div>
+                    <div class="optionLine">
+                        Prefix:
+                        <input type="text" name="prefix" id="prefix" />
+                    </div>
+                    <div class="optionLine">
+                        Postfix:
+                        <input type="text" name="postfix" id="postfix" />
+                    </div>
+                    <div class="optionLine">
+                        Find:
+                        <input type="text" name="find" id="find" />
+                    </div>
+                    <div class="optionLine">
+                        Replace:
+                        <input type="text" name="replace" id="replace" />
+                    </div>
+                </div>
+            </fieldset>
+            <div>
+                <button type="button" name="previewButton" id="previewButton">
+                    Preview
+                </button>
+            </div>
+            <div id="previewDiv" style="display: none;">
+            </div>
+            <div id="renameDiv" style="display: none;">
+                <button type="button" name="renameButton" id="renameButton">
+                    Rename
+                </button>
+            </div>
+        </div> <!-- main -->
+        <script src="settings.js"></script>
+        <script src="batchFileRenamer.js"></script>
+    </body>
+</html>

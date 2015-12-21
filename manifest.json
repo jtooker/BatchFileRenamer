@@ -1,0 +1,17 @@
+{
+    "name": "Batch File Renamer",
+    "description": "Rename multiple files on your filesystem with custom rules with this app",
+    "version": "0.1",
+    "manifest_version": 2,
+    "app": {
+        "background": {
+            "scripts": ["background.js"]
+        }
+    },
+    "icons": { "16": "bfr-16.png", "128": "bfr-128.png" },
+    "minimum_chrome_version": "31",
+    "permissions": [
+        {"fileSystem": ["write", "retainEntries", "directory"]},
+        "storage"
+    ]
+}
