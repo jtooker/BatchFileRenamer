@@ -18,18 +18,19 @@
 ///
 /// For a list of supported settings, see `supported` in the code below.
 
-function settings(onLoad)
-{
+function settings(onLoad) {
+    'use strict';
+
     var self = {};
     var supported = [
         "extFilter",
         "prefix",
         "postfix",
         "findReplace"
-        ];
+    ];
     var cache = {};
-    
-    function addSetting (settingName) {
+
+    function addSetting(settingName) {
         Object.defineProperty(self, settingName, {
             get: function () {
                 return cache[settingName];
@@ -39,7 +40,7 @@ function settings(onLoad)
                 if (value === cache[settingName]) {
                     return;
                 }
-                
+
                 toStore[settingName] = value;
                 cache[settingName] = value;
                 chrome.storage.sync.set(toStore, function () {
@@ -47,7 +48,7 @@ function settings(onLoad)
                         console.log(chrome.runtime.error);
                     } else {
                         console.log("Saved {" + settingName + ": " +
-                                    value + "}");
+                                value + "}");
                     }
                 });
             },
@@ -55,21 +56,21 @@ function settings(onLoad)
             configurable: true
         });
     }
-    
+
     function initializeCache(items) {
         cache = items;
-        
+
         console.log(cache);
-        
+
         if (onLoad) {
             onLoad();
         }
     }
-    
+
     // TODO: listen for setting change events (and test on two machines
     // at the same time!)
-    
+
     chrome.storage.sync.get(supported, initializeCache);
     supported.forEach(addSetting);
     return self;
-};
+}
