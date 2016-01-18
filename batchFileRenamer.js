@@ -191,7 +191,7 @@
         name = m_settings.prefix + name;
         if (m_settings.postfix) {
             parts = name.split('.');
-            parts.splice(parts.length - 1, 0, m_settings.postfix);
+            parts[parts.length - 2] += m_settings.postfix;
             name = parts.join('.');
         }
 
