@@ -18,6 +18,8 @@
 ///
 /// For a list of supported settings, see `supported` in the code below.
 
+/*global chrome, console*/
+
 function settings(onLoad) {
     'use strict';
 
