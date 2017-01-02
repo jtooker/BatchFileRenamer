@@ -21,7 +21,7 @@
 /*global chrome, console*/
 
 function settings(onLoad) {
-    'use strict';
+    "use strict";
 
     var self = {};
     var supported = [

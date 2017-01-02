@@ -2,7 +2,7 @@
 /// @author John Tooker
 /// @license MIT, see `LICENSE.txt`
 ///
-/// The 'model' of this app
+/// The "model" of this app
 
 /*global chrome, console, settings*/
 
@@ -35,9 +35,9 @@ function model(callback) {
 
         name = m_prefix + name;
         if (m_settings.postfix) {
-            parts = name.split('.');
+            parts = name.split(".");
             parts[parts.length - 2] += m_postfix;
-            name = parts.join('.');
+            name = parts.join(".");
         }
 
         return name;
@@ -77,7 +77,7 @@ function model(callback) {
             return "*.*";
         }
 
-        return '*.' + m_extFilter.join(', *.');
+        return "*." + m_extFilter.join(", *.");
     }
 
     // private -----------------------------------------------------------------
@@ -157,11 +157,11 @@ function model(callback) {
 
     // private -----------------------------------------------------------------
     function createFileInfo(fileEntry) {
-        return {'fileEntry': fileEntry,
-                'fileName': fileEntry.name,
-                'newName': fileEntry.name,
-                'fullPath': fileEntry.fullPath,
-                'enabled': isFileTypeEnabled(fileEntry.name)};
+        return {"fileEntry": fileEntry,
+                "fileName": fileEntry.name,
+                "newName": fileEntry.name,
+                "fullPath": fileEntry.fullPath,
+                "enabled": isFileTypeEnabled(fileEntry.name)};
     }
 
     // private -----------------------------------------------------------------
@@ -209,7 +209,7 @@ function model(callback) {
         }
 
         // use local storage to retain access to this file
-        chrome.storage.local.set({'directory': chrome.fileSystem.retainEntry(entry)});
+        chrome.storage.local.set({"directory": chrome.fileSystem.retainEntry(entry)});
         loadDirectory(entry);
     }
 
@@ -228,7 +228,7 @@ function model(callback) {
             return;
         }
 
-        m_extFilter = filterText.split(',');
+        m_extFilter = filterText.split(",");
         m_extFilter.forEach(function (value, i) {
             value = value.trim();
             value = value.replace("*.", "");
@@ -297,9 +297,8 @@ function model(callback) {
         m_prefix = m_settings.prefix || "";
         m_postfix = m_settings.postfix || "";
 
-
         m_findAndReplaces = JSON.parse(m_settings.findReplace ||
-                '[{"find": "", "replace": ""}]');
+                "[{\"find\": \"\", \"replace\": \"\"}]");
 
         m_loading = false;
         refresh();
