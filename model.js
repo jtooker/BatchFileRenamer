@@ -283,6 +283,15 @@ function model(callback) {
         });
     }
 
+    // public ------------------------------------------------------------------
+    function setSelection(selectAll) {
+        m_fileInfos.forEach(function (fileInfo) {
+            fileInfo.enabled = selectAll;
+        });
+
+        refresh();
+    }
+
     // private -----------------------------------------------------------------
     function populateState() {
         console.log("Entered `populateOptions`");
@@ -321,6 +330,7 @@ function model(callback) {
         setPrefix: setPrefix,
         setPostfix: setPostfix,
         setFindReplace: setFindReplace,
-        executeRename: executeRename
+        executeRename: executeRename,
+        setSelection: setSelection
     });
 }

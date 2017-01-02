@@ -13,6 +13,9 @@
     var m_chooseDirectoryButton = document.querySelector("#chooseDirectoryButton");
     var m_filePathInput = document.querySelector("#filePathInput");
     var m_fileListDiv = document.querySelector("#fileListDiv");
+    var m_fileSelectDiv = document.querySelector("#fileButtonDiv");
+    var m_selectAllButton = document.querySelector("#selectAllButton");
+    var m_selectNoneButton = document.querySelector("#selectNoneButton");
     var m_extFilterTextInput = document.querySelector("#extFilter");
     var m_prefixTextInput = document.querySelector("#prefix");
     var m_postfixTextInput = document.querySelector("#postfix");
@@ -70,6 +73,10 @@
             var div = createFileEntryDiv(fileInfo);
             m_fileListDiv.appendChild(div);
         });
+
+        m_fileSelectDiv.style.display = fileInfo.files.length > 0
+            ? "block"
+            : "none";
     }
 
     // private -----------------------------------------------------------------
@@ -132,6 +139,16 @@
     }
 
     // private -----------------------------------------------------------------
+    function selectAll() {
+        m_model.setSelection(true);
+    }
+
+    // private -----------------------------------------------------------------
+    function selectNone() {
+        m_model.setSelection(false);
+    }
+
+    // private -----------------------------------------------------------------
     function setWidgetListeners() {
         m_chooseDirectoryButton.addEventListener("click", function () {
             chrome.fileSystem.chooseEntry(
@@ -146,6 +163,9 @@
                 }
             );
         });
+
+        m_selectAllButton.addEventListener("click", selectAll);
+        m_selectNoneButton.addEventListener("click", selectNone);
 
         m_extFilterTextInput.onchange = function () {
             m_model.setExtensionFilter(m_extFilterTextInput.value);
