@@ -292,6 +292,18 @@ function model(callback) {
         refresh();
     }
 
+    // public ------------------------------------------------------------------
+    function toggleSelection(filename) {
+        m_fileInfos.forEach(function (fileInfo) {
+            if (fileInfo.fileName === filename) {
+                fileInfo.enabled = !fileInfo.enabled;
+            }
+        });
+
+        //refresh({inputFiles: true});
+        refresh();
+    }
+
     // private -----------------------------------------------------------------
     function populateState() {
         console.log("Entered `populateOptions`");
@@ -331,6 +343,7 @@ function model(callback) {
         setPostfix: setPostfix,
         setFindReplace: setFindReplace,
         executeRename: executeRename,
-        setSelection: setSelection
+        setSelection: setSelection,
+        toggleSelection: toggleSelection
     });
 }

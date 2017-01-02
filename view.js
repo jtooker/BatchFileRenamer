@@ -54,7 +54,13 @@
         checkbox.type = "checkbox";
         checkbox.id = fileInfo.fileName + ".checkbox";
         checkbox.checked = fileInfo.checked;
-        // no on click listener needed (yet?)
+        checkbox.addEventListener("click", function () {
+            // delay as the event has not finished
+            setTimeout(function () {
+                m_model.toggleSelection(fileInfo.fileName);
+            });
+        });
+
         fileNameLabel = document.createElement("label");
         fileNameLabel.htmlFor = checkbox.id;
         fileNameLabel.appendChild(document.createTextNode(fileInfo.fileName));
