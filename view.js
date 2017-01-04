@@ -100,11 +100,37 @@
     }
 
     // private -----------------------------------------------------------------
+    function calculatePreviewRowStyle(fileInfo) {
+        function calculateColor() {
+            if (fileInfo.error !== undefined) {
+                return "red";
+            }
+            if (fileInfo.oldName === fileInfo.newName) {
+                return "gray";
+            }
+        }
+        var color = calculateColor();
+
+        return color === undefined
+            ? ""
+            : " style=\"color: " + color + "\"";
+    }
+
+    // private -----------------------------------------------------------------
     function populatePreviewArea(previewData) {
+        var rowStyle = "";
+        var rowTitle = "";
+        var showRenameButton = true;
         var html = "<table>";
 
         previewData.forEach(function (fileInfo) {
-            html += "<tr><td>";
+            showRenameButton = showRenameButton && fileInfo.error === undefined;
+            rowStyle = calculatePreviewRowStyle(fileInfo); // TODO: replace by class
+            rowTitle = fileInfo.error === undefined
+                ? ""
+                : " title=\"" + fileInfo.error + "\"";
+
+            html += "<tr" + rowStyle + rowTitle + "><td>";
             html += fileInfo.oldName;
             html += "</td><td>";
             html += fileInfo.newName;
@@ -114,6 +140,9 @@
         html += "</table>";
 
         m_previewDiv.innerHTML = html;
+
+        showRenameButton = showRenameButton && previewData.length > 0;
+        m_renameButton.disabled = !showRenameButton;
     }
 
     // private -----------------------------------------------------------------

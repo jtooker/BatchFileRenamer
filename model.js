@@ -44,11 +44,34 @@ function model(callback) {
     }
 
     // private -----------------------------------------------------------------
+    function incrementKey(object, key) {
+        if (object[key] > 0) {
+            object[key] += 1;
+        } else {
+            object[key] = 1;
+        }
+    }
+
+    // private -----------------------------------------------------------------
     function calculateNames() {
+        var usedNames = {};
+
         m_fileInfos.forEach(function (fileInfo) {
-            if (fileInfo.enabled) {
-                fileInfo.newName = calculateName(fileInfo.fileName);
+            fileInfo.newName = fileInfo.enabled
+                ? calculateName(fileInfo.fileName)
+                : fileInfo.fileName;
+
+            if (fileInfo.fileName !== fileInfo.newName) {
+                // otherwise it may be overwritten
+                incrementKey(usedNames, fileInfo.fileName);
             }
+            incrementKey(usedNames, fileInfo.newName);
+        });
+
+        m_fileInfos.forEach(function (fileInfo) {
+            fileInfo.error = usedNames[fileInfo.newName] > 1
+                ? "Another file has this name"
+                : undefined;
         });
     }
 
@@ -125,7 +148,8 @@ function model(callback) {
             if (fileInfo.enabled) {
                 changes.push({
                     oldName: fileInfo.fileName,
-                    newName: fileInfo.newName
+                    newName: fileInfo.newName,
+                    error: fileInfo.error
                 });
             }
         });
@@ -160,7 +184,6 @@ function model(callback) {
         return {"fileEntry": fileEntry,
                 "fileName": fileEntry.name,
                 "newName": fileEntry.name,
-                "fullPath": fileEntry.fullPath,
                 "enabled": isFileTypeEnabled(fileEntry.name)};
     }
 
@@ -203,7 +226,6 @@ function model(callback) {
 
     // pubic -------------------------------------------------------------------
     function setDirectory(entry) {
-
         if (!entry) {
             return;
         }
@@ -261,26 +283,31 @@ function model(callback) {
         refresh();
     }
 
-    // private -----------------------------------------------------------------
-    function onRenameFailure(fileError) {
-        console.log(
-            "ERROR: Could not rename: " +
-            (fileError.message || fileError.name)
-        );
-    }
-
     // public ------------------------------------------------------------------
     function executeRename() {
         m_fileInfos.forEach(function (fileInfo) {
-            if (fileInfo.enabled && fileInfo.fileName !== fileInfo.newName) {
+            if (fileInfo.enabled && fileInfo.fileName !== fileInfo.newName &&
+                    fileInfo.error === undefined) {
                 fileInfo.fileEntry.moveTo(
                     m_directoryEntry,
                     fileInfo.newName,
-                    undefined,
-                    onRenameFailure
+                    function (fileEntry) {
+                        fileInfo.enabled = false;
+                        fileInfo.fileName = fileEntry.name;
+                        fileInfo.fileEntry = fileEntry;
+                        refresh();
+                    },
+                    function (fileError) {
+                        fileInfo.error = fileError.message;
+                        refresh();
+                    }
                 );
+            } else {
+                fileInfo.enabled = false;
             }
         });
+
+        refresh();  // for the non-callback changes
     }
 
     // public ------------------------------------------------------------------
@@ -300,7 +327,6 @@ function model(callback) {
             }
         });
 
-        //refresh({inputFiles: true});
         refresh();
     }
 
