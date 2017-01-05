@@ -14,6 +14,8 @@ function model(callback) {
     var m_directoryEntry;
     var m_fileInfos = [];
     var m_extFilter = [];   /// [] means all are valid, else whitelist
+    var m_usePrefix = true;
+    var m_usePostfix = true;
     var m_prefix = "";
     var m_postfix = "";
     var m_findAndReplaces = [];
@@ -33,8 +35,10 @@ function model(callback) {
             name = name.replace(fr.find, fr.replace);
         });
 
-        name = m_prefix + name;
-        if (m_settings.postfix) {
+        if (m_usePrefix) {
+            name = m_prefix + name;
+        }
+        if (m_usePostfix && m_postfix) {
             parts = name.split(".");
             parts[parts.length - 2] += m_postfix;
             name = parts.join(".");
@@ -134,7 +138,9 @@ function model(callback) {
     function getOptions() {
         return Object.freeze({
             extFilter: getExtFilterString(),
+            usePrefix: m_usePrefix,
             prefix: m_prefix,
+            usePostfix: m_usePostfix,
             postfix: m_postfix,
             findAndReplaces: m_findAndReplaces
         });
@@ -262,6 +268,20 @@ function model(callback) {
     }
 
     // public ------------------------------------------------------------------
+    function toggleUsePrefix() {
+        m_usePrefix = !m_usePrefix;
+        m_settings.usePrefix = m_usePrefix;
+        refresh();
+    }
+
+    // public ------------------------------------------------------------------
+    function toggleUsePostfix() {
+        m_usePostfix = !m_usePostfix;
+        m_settings.usePostfix = m_usePostfix;
+        refresh();
+    }
+
+    // public ------------------------------------------------------------------
     function setPrefix(prefix) {
         m_settings.prefix = prefix;
         m_prefix = prefix;
@@ -341,6 +361,12 @@ function model(callback) {
 
         setExtensionFilter(m_settings.extFilter);
 
+        m_usePrefix = m_settings.usePrefix === undefined
+            ? true
+            : m_settings.usePrefix;
+        m_usePostfix = m_settings.usePostfix === undefined
+            ? true
+            : m_settings.usePostfix;
         m_prefix = m_settings.prefix || "";
         m_postfix = m_settings.postfix || "";
 
@@ -365,6 +391,8 @@ function model(callback) {
         getPreview: getPreview,
         setDirectory: setDirectory,
         setExtensionFilter: setExtensionFilter,
+        toggleUsePrefix: toggleUsePrefix,
+        toggleUsePostfix: toggleUsePostfix,
         setPrefix: setPrefix,
         setPostfix: setPostfix,
         setFindReplace: setFindReplace,

@@ -17,7 +17,9 @@
     var m_selectAllButton = document.querySelector("#selectAllButton");
     var m_selectNoneButton = document.querySelector("#selectNoneButton");
     var m_extFilterTextInput = document.querySelector("#extFilter");
+    var m_prefixCheckbox = document.querySelector("#prefixCheckbox");
     var m_prefixTextInput = document.querySelector("#prefix");
+    var m_postfixCheckbox = document.querySelector("#postfixCheckbox");
     var m_postfixTextInput = document.querySelector("#postfix");
     var m_findTextInput = document.querySelector("#find");
     var m_replaceTextInput = document.querySelector("#replace");
@@ -91,7 +93,11 @@
             return;
         }
         m_extFilterTextInput.value = options.extFilter;
+        m_prefixCheckbox.checked = options.usePrefix;
+        m_prefixTextInput.disabled = !options.usePrefix;
         m_prefixTextInput.value = options.prefix;
+        m_postfixCheckbox.checked = options.usePostfix;
+        m_postfixTextInput.disabled = !options.usePostfix;
         m_postfixTextInput.value = options.postfix;
         if (options.findAndReplaces.length > 0) {
             m_findTextInput.value = options.findAndReplaces[0].find;
@@ -206,10 +212,18 @@
             m_model.setExtensionFilter(m_extFilterTextInput.value);
         };
 
+        m_prefixCheckbox.addEventListener("click", function () {
+            // delay as the event has not finished
+            setTimeout(m_model.toggleUsePrefix);
+        });
         m_prefixTextInput.onchange = function () {
             m_model.setPrefix(m_prefixTextInput.value);
         };
 
+        m_postfixCheckbox.addEventListener("click", function () {
+            // delay as the event has not finished
+            setTimeout(m_model.toggleUsePostfix);
+        });
         m_postfixTextInput.onchange = function () {
             m_model.setPostfix(m_postfixTextInput.value);
         };
