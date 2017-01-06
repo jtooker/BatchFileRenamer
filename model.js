@@ -14,10 +14,6 @@ function model(callback) {
     var m_directoryEntry;
     var m_fileInfos = [];
     var m_extFilter = [];   /// [] means all are valid, else whitelist
-    var m_usePrefix = true;
-    var m_usePostfix = true;
-    var m_prefix = "";
-    var m_postfix = "";
     var m_findAndReplaces = [];
     var m_settings;
     var m_onStaleData;      /// @see setOnRefresh
@@ -35,12 +31,12 @@ function model(callback) {
             name = name.replace(fr.find, fr.replace);
         });
 
-        if (m_usePrefix) {
-            name = m_prefix + name;
+        if (m_settings.usePrefix) {
+            name = m_settings.prefix + name;
         }
-        if (m_usePostfix && m_postfix) {
+        if (m_settings.usePostfix && m_settings.postfix) {
             parts = name.split(".");
-            parts[parts.length - 2] += m_postfix;
+            parts[parts.length - 2] += m_settings.postfix;
             name = parts.join(".");
         }
 
@@ -138,10 +134,10 @@ function model(callback) {
     function getOptions() {
         return Object.freeze({
             extFilter: getExtFilterString(),
-            usePrefix: m_usePrefix,
-            prefix: m_prefix,
-            usePostfix: m_usePostfix,
-            postfix: m_postfix,
+            usePrefix: m_settings.usePrefix,
+            prefix: m_settings.prefix,
+            usePostfix: m_settings.usePostfix,
+            postfix: m_settings.postfix,
             findAndReplaces: m_findAndReplaces
         });
     }
@@ -269,29 +265,25 @@ function model(callback) {
 
     // public ------------------------------------------------------------------
     function toggleUsePrefix() {
-        m_usePrefix = !m_usePrefix;
-        m_settings.usePrefix = m_usePrefix;
+        m_settings.usePrefix = !m_settings.usePrefix;
         refresh();
     }
 
     // public ------------------------------------------------------------------
     function toggleUsePostfix() {
-        m_usePostfix = !m_usePostfix;
-        m_settings.usePostfix = m_usePostfix;
+        m_settings.usePostfix = !m_settings.usePostfix;
         refresh();
     }
 
     // public ------------------------------------------------------------------
     function setPrefix(prefix) {
         m_settings.prefix = prefix;
-        m_prefix = prefix;
         refresh();
     }
 
     // public ------------------------------------------------------------------
     function setPostfix(postfix) {
         m_settings.postfix = postfix;
-        m_postfix = postfix;
         refresh();
     }
 
@@ -349,6 +341,13 @@ function model(callback) {
 
         refresh();
     }
+    
+    // private -----------------------------------------------------------------
+    function initializeSetting(name, value) {
+        if (m_settings[name] === undefined) {
+            m_settings[name] = value;
+        }
+    }
 
     // private -----------------------------------------------------------------
     function populateState() {
@@ -361,14 +360,10 @@ function model(callback) {
 
         setExtensionFilter(m_settings.extFilter);
 
-        m_usePrefix = m_settings.usePrefix === undefined
-            ? true
-            : m_settings.usePrefix;
-        m_usePostfix = m_settings.usePostfix === undefined
-            ? true
-            : m_settings.usePostfix;
-        m_prefix = m_settings.prefix || "";
-        m_postfix = m_settings.postfix || "";
+        initializeSetting("usePrefix", true);
+        initializeSetting("usePostfix", true);
+        initializeSetting("prefix", "");
+        initializeSetting("postfix", "");
 
         m_findAndReplaces = JSON.parse(m_settings.findReplace ||
                 "[{\"find\": \"\", \"replace\": \"\"}]");
