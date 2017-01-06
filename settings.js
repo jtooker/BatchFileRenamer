@@ -26,6 +26,8 @@ function settings(onLoad) {
     var self = {};
     var supported = [
         "extFilter",
+        "usePrefix",
+        "usePostfix",
         "prefix",
         "postfix",
         "findReplace"
