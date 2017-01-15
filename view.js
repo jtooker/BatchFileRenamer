@@ -23,6 +23,10 @@
     var m_postfixTextInput = document.querySelector("#postfix");
     var m_findTextInput = document.querySelector("#find");
     var m_replaceTextInput = document.querySelector("#replace");
+    var m_lowerExtCheckbox = document.querySelector("#lowerExtCheckbox");
+    var m_upperExtCheckbox = document.querySelector("#upperExtCheckbox");
+    var m_extensionToCheckbox = document.querySelector("#extensionToCheckbox");
+    var m_extensionsToTextInput = document.querySelector("#extensionsToTextInput");
     var m_previewDiv = document.querySelector("#previewDiv");
     var m_renameButton = document.querySelector("#renameButton");
 
@@ -103,6 +107,11 @@
             m_findTextInput.value = options.findAndReplaces[0].find;
             m_replaceTextInput.value = options.findAndReplaces[0].replace;
         }
+        m_lowerExtCheckbox.checked = options.lowercaseExtensions;
+        m_upperExtCheckbox.checked = options.uppercaseExtensions;
+        m_extensionToCheckbox.checked = options.haveCustomExtensions;
+        m_extensionsToTextInput.value = options.customExtension;
+        m_extensionsToTextInput.disabled = !options.haveCustomExtensions;
     }
 
     // private -----------------------------------------------------------------
@@ -131,7 +140,7 @@
 
         previewData.forEach(function (fileInfo) {
             showRenameButton = showRenameButton && fileInfo.error === undefined;
-            rowStyle = calculatePreviewRowStyle(fileInfo); // TODO: replace by class
+            rowStyle = calculatePreviewRowStyle(fileInfo); // TODO: replace by css class
             rowTitle = fileInfo.error === undefined
                 ? ""
                 : " title=\"" + fileInfo.error + "\"";
@@ -177,6 +186,17 @@
             find: m_findTextInput.value,
             replace: m_replaceTextInput.value
         });
+    }
+
+    // private -----------------------------------------------------------------
+    function storeExtensionOptions(a_event) {
+        if (a_event.target === m_lowerExtCheckbox) {
+            setTimeout(m_model.toggleLowerExtension);
+        } else if (a_event.target === m_upperExtCheckbox) {
+            setTimeout(m_model.toggleUpperExtension);
+        } else if (a_event.target === m_extensionToCheckbox) {
+            setTimeout(m_model.toggleCustomExtension);
+        }
     }
 
     // private -----------------------------------------------------------------
@@ -230,6 +250,16 @@
 
         m_findTextInput.onchange = storeFindReplace;
         m_replaceTextInput.onchange = storeFindReplace;
+
+        m_lowerExtCheckbox.addEventListener("click", storeExtensionOptions);
+        m_upperExtCheckbox.addEventListener("click", storeExtensionOptions);
+        m_extensionToCheckbox.addEventListener("click", storeExtensionOptions);
+        m_extensionsToTextInput.onchange = function () {
+            setTimeout(function () {
+                m_model.setExtensionToUse(m_extensionsToTextInput.value);
+            });
+        };
+
         m_renameButton.onclick = m_model.executeRename;
     }
 

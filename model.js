@@ -25,22 +25,47 @@ function model(callback) {
 
     // private -----------------------------------------------------------------
     function calculateName(name) {
-        var parts;
+        var stem;       // up to last period
+        var extension;  // includes period
+        var lastPeriodIndex = name.lastIndexOf(".");
 
+        // treat names that start with a period as not having an extension
+        if (lastPeriodIndex < 1) {
+            stem = name;
+            extension = "";
+        } else {
+            stem = name.substring(0, lastPeriodIndex);
+            extension = name.substring(lastPeriodIndex);
+        }
+
+        // stem modifications
         m_findAndReplaces.forEach(function (fr) {
-            name = name.replace(fr.find, fr.replace);
+            stem = stem.replace(fr.find, fr.replace);
         });
 
         if (m_settings.usePrefix) {
-            name = m_settings.prefix + name;
+            stem = m_settings.prefix + stem;
         }
-        if (m_settings.usePostfix && m_settings.postfix) {
-            parts = name.split(".");
-            parts[parts.length - 2] += m_settings.postfix;
-            name = parts.join(".");
+        if (m_settings.usePostfix) {
+            stem = stem + m_settings.postfix;
         }
 
-        return name;
+        // extension modifications
+        if (m_settings.lowercaseExtensions) {
+            extension = extension.toLowerCase();
+        } else if (m_settings.uppercaseExtensions) {
+            extension = extension.toUpperCase();
+        } else if (m_settings.haveCustomExtensions) {
+            if (m_settings.customExtension === "") {
+                extension = "";
+            } else if (m_settings.customExtension.indexOf(".") === 0) {
+                extension = m_settings.customExtension;
+            } else {
+                extension = "." + m_settings.customExtension;
+            }
+        }
+
+        return stem + extension;
     }
 
     // private -----------------------------------------------------------------
@@ -138,6 +163,10 @@ function model(callback) {
             prefix: m_settings.prefix,
             usePostfix: m_settings.usePostfix,
             postfix: m_settings.postfix,
+            lowercaseExtensions: m_settings.lowercaseExtensions,
+            uppercaseExtensions: m_settings.uppercaseExtensions,
+            haveCustomExtensions: m_settings.haveCustomExtensions,
+            customExtension: m_settings.customExtension,
             findAndReplaces: m_findAndReplaces
         });
     }
@@ -287,6 +316,36 @@ function model(callback) {
         refresh();
     }
 
+    // public ------------------------------------------------------------------
+    function toggleLowerExtension() {
+        m_settings.lowercaseExtensions = !m_settings.lowercaseExtensions;
+        m_settings.uppercaseExtensions = false;
+        m_settings.haveCustomExtensions = false;
+        refresh();
+    }
+
+    // public ------------------------------------------------------------------
+    function toggleUpperExtension() {
+        m_settings.lowercaseExtensions = false;
+        m_settings.uppercaseExtensions = !m_settings.uppercaseExtensions;
+        m_settings.haveCustomExtensions = false;
+        refresh();
+    }
+
+    // public ------------------------------------------------------------------
+    function toggleCustomExtension() {
+        m_settings.lowercaseExtensions = false;
+        m_settings.uppercaseExtensions = false;
+        m_settings.haveCustomExtensions = !m_settings.haveCustomExtensions;
+        refresh();
+    }
+
+    // public ------------------------------------------------------------------
+    function setExtensionToUse(customExtension) {
+        m_settings.customExtension = customExtension;
+        refresh();
+    }
+
     // private -----------------------------------------------------------------
     function setFindReplace(pair) {
         // pair.find and pair.replace are strings
@@ -341,7 +400,7 @@ function model(callback) {
 
         refresh();
     }
-    
+
     // private -----------------------------------------------------------------
     function initializeSetting(name, value) {
         if (m_settings[name] === undefined) {
@@ -364,6 +423,10 @@ function model(callback) {
         initializeSetting("usePostfix", true);
         initializeSetting("prefix", "");
         initializeSetting("postfix", "");
+        initializeSetting("lowercaseExtensions", false);
+        initializeSetting("uppercaseExtensions", false);
+        initializeSetting("haveCustomExtensions", false);
+        initializeSetting("customExtension", "");
 
         m_findAndReplaces = JSON.parse(m_settings.findReplace ||
                 "[{\"find\": \"\", \"replace\": \"\"}]");
@@ -393,6 +456,10 @@ function model(callback) {
         setFindReplace: setFindReplace,
         executeRename: executeRename,
         setSelection: setSelection,
-        toggleSelection: toggleSelection
+        toggleSelection: toggleSelection,
+        toggleLowerExtension: toggleLowerExtension,
+        toggleUpperExtension: toggleUpperExtension,
+        toggleCustomExtension: toggleCustomExtension,
+        setExtensionToUse: setExtensionToUse
     });
 }

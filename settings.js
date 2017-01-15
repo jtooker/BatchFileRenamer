@@ -30,7 +30,11 @@ function settings(onLoad) {
         "usePostfix",
         "prefix",
         "postfix",
-        "findReplace"
+        "findReplace",
+        "lowercaseExtensions",
+        "uppercaseExtensions",
+        "haveCustomExtensions",
+        "customExtension"
     ];
     var cache = {};
 
