@@ -24,6 +24,21 @@ function model(callback) {
     }
 
     // private -----------------------------------------------------------------
+    function capitalizeFirstLetter(text) {
+        text = text.toLowerCase();
+
+        return text.replace(/^./, function (first) {
+            return first.toUpperCase();
+        });
+    }
+
+    // private -----------------------------------------------------------------
+    function capitalizeEachWord(text) {
+        // http://stackoverflow.com/questions/15150168/
+        return text.replace(/[^\s]+/g, capitalizeFirstLetter);
+    }
+
+    // private -----------------------------------------------------------------
     function calculateName(name) {
         var stem;       // up to last period
         var extension;  // includes period
@@ -48,6 +63,22 @@ function model(callback) {
         }
         if (m_settings.usePostfix) {
             stem = stem + m_settings.postfix;
+        }
+        switch (m_settings.changeCase) {
+        case "unchanged":
+            break;
+        case "uppercase":
+            stem = stem.toUpperCase();
+            break;
+        case "lowercase":
+            stem = stem.toLowerCase();
+            break;
+        case "capitalize_words":
+            stem = capitalizeEachWord(stem);
+            break;
+        case "capitalize_first_letter":
+            stem = capitalizeFirstLetter(stem);
+            break;
         }
 
         // extension modifications
@@ -163,6 +194,7 @@ function model(callback) {
             prefix: m_settings.prefix,
             usePostfix: m_settings.usePostfix,
             postfix: m_settings.postfix,
+            changeCase: m_settings.changeCase,
             lowercaseExtensions: m_settings.lowercaseExtensions,
             uppercaseExtensions: m_settings.uppercaseExtensions,
             haveCustomExtensions: m_settings.haveCustomExtensions,
@@ -354,6 +386,12 @@ function model(callback) {
         refresh();
     }
 
+    // private -----------------------------------------------------------------
+    function setChangeCase(changeCase) {
+        m_settings.changeCase = changeCase;
+        refresh();
+    }
+
     // public ------------------------------------------------------------------
     function executeRename() {
         m_fileInfos.forEach(function (fileInfo) {
@@ -423,6 +461,7 @@ function model(callback) {
         initializeSetting("usePostfix", true);
         initializeSetting("prefix", "");
         initializeSetting("postfix", "");
+        initializeSetting("changeCase", "unchanged");
         initializeSetting("lowercaseExtensions", false);
         initializeSetting("uppercaseExtensions", false);
         initializeSetting("haveCustomExtensions", false);
@@ -454,6 +493,7 @@ function model(callback) {
         setPrefix: setPrefix,
         setPostfix: setPostfix,
         setFindReplace: setFindReplace,
+        setChangeCase: setChangeCase,
         executeRename: executeRename,
         setSelection: setSelection,
         toggleSelection: toggleSelection,

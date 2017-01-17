@@ -31,6 +31,7 @@ function settings(onLoad) {
         "prefix",
         "postfix",
         "findReplace",
+        "changeCase",
         "lowercaseExtensions",
         "uppercaseExtensions",
         "haveCustomExtensions",

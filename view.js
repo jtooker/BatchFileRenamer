@@ -23,6 +23,7 @@
     var m_postfixTextInput = document.querySelector("#postfix");
     var m_findTextInput = document.querySelector("#find");
     var m_replaceTextInput = document.querySelector("#replace");
+    var m_caseComboBox = document.querySelector("#caseComboBox");
     var m_lowerExtCheckbox = document.querySelector("#lowerExtCheckbox");
     var m_upperExtCheckbox = document.querySelector("#upperExtCheckbox");
     var m_extensionToCheckbox = document.querySelector("#extensionToCheckbox");
@@ -107,6 +108,7 @@
             m_findTextInput.value = options.findAndReplaces[0].find;
             m_replaceTextInput.value = options.findAndReplaces[0].replace;
         }
+        m_caseComboBox.value = options.changeCase;
         m_lowerExtCheckbox.checked = options.lowercaseExtensions;
         m_upperExtCheckbox.checked = options.uppercaseExtensions;
         m_extensionToCheckbox.checked = options.haveCustomExtensions;
@@ -250,6 +252,10 @@
 
         m_findTextInput.onchange = storeFindReplace;
         m_replaceTextInput.onchange = storeFindReplace;
+
+        m_caseComboBox.onchange = function () {
+            m_model.setChangeCase(m_caseComboBox.value);
+        };
 
         m_lowerExtCheckbox.addEventListener("click", storeExtensionOptions);
         m_upperExtCheckbox.addEventListener("click", storeExtensionOptions);
