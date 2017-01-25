@@ -243,6 +243,19 @@ function model(callback) {
     }
 
     // private -----------------------------------------------------------------
+    function onDirectoryLoaded() {
+        function compare(left, right) {
+            var leftName = left.fileName;
+            var rightName = right.fileName;
+            return leftName.localeCompare(rightName, undefined,
+                    {sensitivity: "case", numeric: true});
+        }
+
+        m_fileInfos.sort(compare);
+        refresh();
+    }
+
+    // private -----------------------------------------------------------------
     function createFileInfo(fileEntry) {
         return {"fileEntry": fileEntry,
                 "fileName": fileEntry.name,
@@ -266,7 +279,7 @@ function model(callback) {
             directoryReader.readEntries(
                 function (results) {
                     if (!results.length) {
-                        refresh();
+                        onDirectoryLoaded();
                         return;
                     }
 
