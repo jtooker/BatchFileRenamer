@@ -13,6 +13,7 @@
     var m_chooseDirectoryButton = document.querySelector("#chooseDirectoryButton");
     var m_filePathInput = document.querySelector("#filePathInput");
     var m_fileListDiv = document.querySelector("#fileListDiv");
+    var m_fileTable = document.querySelector("#fileTable");
     var m_fileSelectDiv = document.querySelector("#fileButtonDiv");
     var m_selectAllButton = document.querySelector("#selectAllButton");
     var m_selectNoneButton = document.querySelector("#selectNoneButton");
@@ -28,7 +29,6 @@
     var m_upperExtCheckbox = document.querySelector("#upperExtCheckbox");
     var m_extensionToCheckbox = document.querySelector("#extensionToCheckbox");
     var m_extensionsToTextInput = document.querySelector("#extensionsToTextInput");
-    var m_previewDiv = document.querySelector("#previewDiv");
     var m_renameButton = document.querySelector("#renameButton");
 
     var m_model;
@@ -48,48 +48,87 @@
     }
 
     // private -----------------------------------------------------------------
-    function createFileEntryDiv(fileInfo) {
-        var checkbox;
-        var fileNameLabel;
-        var div;
+    function calculatePreviewRowStyle(fileInfo) {
+        function calculateColor() {
+            if (fileInfo.error !== undefined) {
+                return "red";
+            }
+            if (fileInfo.fileName === fileInfo.newName) {
+                return "gray";
+            }
+        }
+        var color = calculateColor();
 
-        div = document.createElement("div");
-        div.id = fileInfo.fileName + ".div";
-        div.className = "fileEntry";
+        return color === undefined
+            ? ""
+            : "color: " + color;
+    }
+
+    // private -----------------------------------------------------------------
+    function createFileEntryRow(fileInfo, row) {
+        var cell;
+        var checkbox;
+
+        function toggleRow() {
+            // delay as the event has not finished
+            setTimeout(function () {
+                m_model.toggleSelection(fileInfo.fileName);
+            });
+        }
+
+        row.style = calculatePreviewRowStyle(fileInfo); // TODO: replace by css class
+        row.title = fileInfo.error || "";
 
         checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.id = fileInfo.fileName + ".checkbox";
         checkbox.checked = fileInfo.checked;
-        checkbox.addEventListener("click", function () {
-            // delay as the event has not finished
-            setTimeout(function () {
-                m_model.toggleSelection(fileInfo.fileName);
-            });
-        });
+        cell = row.insertCell();
+        cell.appendChild(checkbox);
 
-        fileNameLabel = document.createElement("label");
-        fileNameLabel.htmlFor = checkbox.id;
-        fileNameLabel.appendChild(document.createTextNode(fileInfo.fileName));
+        cell = row.insertCell();
+        cell.appendChild(document.createTextNode(fileInfo.fileName));
 
-        div.appendChild(checkbox);
-        div.appendChild(fileNameLabel);
-        return div;
+        cell = row.insertCell();
+        cell.appendChild(document.createTextNode(fileInfo.newName));
+
+        row.addEventListener("click", toggleRow);
     }
 
     // private -----------------------------------------------------------------
-    function populateInputFilesArea(fileInfo) {
-        m_filePathInput.value = fileInfo.directoryPath;
-
-        m_fileListDiv.innerHTML = "";
-        fileInfo.files.forEach(function (fileInfo) {
-            var div = createFileEntryDiv(fileInfo);
-            m_fileListDiv.appendChild(div);
-        });
-
-        m_fileSelectDiv.style.display = fileInfo.files.length > 0
+    function populateFilesArea(fileState) {
+        var displayStyle = fileState.files.length > 0
             ? "block"
             : "none";
+        var showRenameButton = true;
+        var renameCount = fileState.files.filter(function (fileInfo) {
+            return fileInfo.checked && fileInfo.error === undefined;
+        }).length > 0;
+        var oldTBody = m_fileTable.getElementsByTagName("tbody")[0];
+        var newTBody = document.createElement("tbody");
+        var row;
+
+        m_filePathInput.value = fileState.directoryPath;
+
+        fileState.files.forEach(function (fileInfo) {
+            row = newTBody.insertRow();
+            createFileEntryRow(fileInfo, row);
+        });
+
+        m_fileTable.replaceChild(newTBody, oldTBody);
+        m_fileListDiv.style.display = displayStyle;
+        m_fileSelectDiv.style.display = displayStyle;
+
+        showRenameButton = showRenameButton &&
+                fileState.files.every(function (fileInfo) {
+            return fileInfo.error === undefined;
+        });
+        showRenameButton = showRenameButton &&
+                fileState.files.some(function (fileInfo) {
+            return fileInfo.fileName !== fileInfo.newName;
+        });
+        showRenameButton = showRenameButton && renameCount > 0;
+        m_renameButton.disabled = !showRenameButton;
     }
 
     // private -----------------------------------------------------------------
@@ -117,52 +156,6 @@
     }
 
     // private -----------------------------------------------------------------
-    function calculatePreviewRowStyle(fileInfo) {
-        function calculateColor() {
-            if (fileInfo.error !== undefined) {
-                return "red";
-            }
-            if (fileInfo.oldName === fileInfo.newName) {
-                return "gray";
-            }
-        }
-        var color = calculateColor();
-
-        return color === undefined
-            ? ""
-            : " style=\"color: " + color + "\"";
-    }
-
-    // private -----------------------------------------------------------------
-    function populatePreviewArea(previewData) {
-        var rowStyle = "";
-        var rowTitle = "";
-        var showRenameButton = true;
-        var html = "<table>";
-
-        previewData.forEach(function (fileInfo) {
-            showRenameButton = showRenameButton && fileInfo.error === undefined;
-            rowStyle = calculatePreviewRowStyle(fileInfo); // TODO: replace by css class
-            rowTitle = fileInfo.error === undefined
-                ? ""
-                : " title=\"" + fileInfo.error + "\"";
-
-            html += "<tr" + rowStyle + rowTitle + "><td>";
-            html += fileInfo.oldName;
-            html += "</td><td>";
-            html += fileInfo.newName;
-            html += "</td></tr>";
-        });
-
-        html += "</table>";
-
-        m_previewDiv.innerHTML = html;
-
-        showRenameButton = showRenameButton && previewData.length > 0;
-        m_renameButton.disabled = !showRenameButton;
-    }
-
-    // private -----------------------------------------------------------------
     function refresh(what) {
         if (what && what.errorMessage) {
             reportError(what.errorMessage);
@@ -171,14 +164,11 @@
 
         populateLoading();
 
-        if (!what || what.inputFiles) {
-            populateInputFilesArea(m_model.getFileInfo());
+        if (!what || what.files) {
+            populateFilesArea(m_model.getFileInfo());
         }
         if (!what || what.options) {
             populateOptionsArea(m_model.getOptions());
-        }
-        if (!what || what.preview) {
-            populatePreviewArea(m_model.getPreview());
         }
     }
 

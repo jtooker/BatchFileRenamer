@@ -13,10 +13,22 @@
                     </nav>
                     Path: <input type="text" id="filePathInput" readonly />
                 </div>
-                <div id="fileListDiv"></div>
+                <div id="fileListDiv">
+                    <table id="fileTable">
+                        <thead>
+                            <tr>
+                                 <th><input type="checkbox" /></th>
+                                 <th>Original Name</th>
+                                 <th>New Name</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
                 <div id="fileButtonDiv">
                     <button id="selectAllButton">Select All</button>
                     <button id="selectNoneButton">Select None</button>
+                    <button id="renameButton">Rename</button>
                 </div>
             </fieldset>
             <fieldset>
@@ -83,13 +95,6 @@
                     </div>
                 </div>
             </fieldset>
-            <div id="previewDiv">
-            </div>
-            <div id="renameDiv">
-                <button type="button" name="renameButton" id="renameButton">
-                    Rename
-                </button>
-            </div>
         </div> <!-- main -->
         <script src="settings.js"></script>
         <script src="model.js"></script>

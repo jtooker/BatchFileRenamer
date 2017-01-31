@@ -171,7 +171,9 @@ function model(callback) {
         m_fileInfos.forEach(function (fileInfo) {
             simpleInfos.push({
                 checked: fileInfo.enabled,
-                fileName: fileInfo.fileName
+                fileName: fileInfo.fileName,
+                newName: fileInfo.newName,
+                error: fileInfo.error
             });
         });
 
@@ -201,23 +203,6 @@ function model(callback) {
             customExtension: m_settings.customExtension,
             findAndReplaces: m_findAndReplaces
         });
-    }
-
-    // pubic -------------------------------------------------------------------
-    function getPreview() {
-        var changes = [];
-
-        m_fileInfos.forEach(function (fileInfo) {
-            if (fileInfo.enabled) {
-                changes.push({
-                    oldName: fileInfo.fileName,
-                    newName: fileInfo.newName,
-                    error: fileInfo.error
-                });
-            }
-        });
-
-        return changes;
     }
 
     // private -----------------------------------------------------------------
@@ -498,7 +483,6 @@ function model(callback) {
         areLoading: areLoading,
         getFileInfo: getFileInfo,
         getOptions: getOptions,
-        getPreview: getPreview,
         setDirectory: setDirectory,
         setExtensionFilter: setExtensionFilter,
         toggleUsePrefix: toggleUsePrefix,
