@@ -14,9 +14,8 @@
     var m_filePathInput = document.querySelector("#filePathInput");
     var m_fileListDiv = document.querySelector("#fileListDiv");
     var m_fileTable = document.querySelector("#fileTable");
+    var m_masterCheckbox = document.querySelector("#masterCheckbox");
     var m_fileSelectDiv = document.querySelector("#fileButtonDiv");
-    var m_selectAllButton = document.querySelector("#selectAllButton");
-    var m_selectNoneButton = document.querySelector("#selectNoneButton");
     var m_extFilterTextInput = document.querySelector("#extFilter");
     var m_prefixCheckbox = document.querySelector("#prefixCheckbox");
     var m_prefixTextInput = document.querySelector("#prefix");
@@ -96,6 +95,18 @@
     }
 
     // private -----------------------------------------------------------------
+    function populateMasterCheckbox(fileInfos) {
+        function isFileChecked(fileInfo) {
+            return fileInfo.checked;
+        }
+        var allChecked = fileInfos.every(isFileChecked);
+        var someChecked = fileInfos.some(isFileChecked);
+
+        m_masterCheckbox.checked = allChecked;
+        m_masterCheckbox.indeterminate = someChecked && !allChecked;
+    }
+
+    // private -----------------------------------------------------------------
     function populateFilesArea(fileState) {
         var displayStyle = fileState.files.length > 0
             ? "block"
@@ -107,6 +118,8 @@
         var oldTBody = m_fileTable.getElementsByTagName("tbody")[0];
         var newTBody = document.createElement("tbody");
         var row;
+
+        populateMasterCheckbox(fileState.files);
 
         m_filePathInput.value = fileState.directoryPath;
 
@@ -192,13 +205,8 @@
     }
 
     // private -----------------------------------------------------------------
-    function selectAll() {
-        m_model.setSelection(true);
-    }
-
-    // private -----------------------------------------------------------------
-    function selectNone() {
-        m_model.setSelection(false);
+    function toggleSelectAll() {
+        m_model.setSelection(m_masterCheckbox.checked);
     }
 
     // private -----------------------------------------------------------------
@@ -217,8 +225,10 @@
             );
         });
 
-        m_selectAllButton.addEventListener("click", selectAll);
-        m_selectNoneButton.addEventListener("click", selectNone);
+        m_masterCheckbox.addEventListener("click", function () {
+            // delay as the event has not finished
+            setTimeout(toggleSelectAll);
+        });
 
         m_extFilterTextInput.onchange = function () {
             m_model.setExtensionFilter(m_extFilterTextInput.value);
