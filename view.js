@@ -11,11 +11,11 @@
 
     // HTML elements
     var m_chooseDirectoryButton = document.querySelector("#chooseDirectoryButton");
-    var m_filePathInput = document.querySelector("#filePathInput");
+    var m_appbarTitle = document.querySelector("#appbarTitle");
     var m_fileListDiv = document.querySelector("#fileListDiv");
     var m_fileTable = document.querySelector("#fileTable");
     var m_masterCheckbox = document.querySelector("#masterCheckbox");
-    var m_fileSelectDiv = document.querySelector("#fileButtonDiv");
+    var m_fileButtonDiv = document.querySelector("#fileButtonDiv");
     var m_extFilterTextInput = document.querySelector("#extFilter");
     var m_prefixCheckbox = document.querySelector("#prefixCheckbox");
     var m_prefixTextInput = document.querySelector("#prefix");
@@ -121,7 +121,9 @@
 
         populateMasterCheckbox(fileState.files);
 
-        m_filePathInput.value = fileState.directoryPath;
+        m_appbarTitle.innerHTML = fileState.directoryPath === ""
+                ? "Batch File Renamer"
+                : fileState.directoryPath;
 
         fileState.files.forEach(function (fileInfo) {
             row = newTBody.insertRow();
@@ -130,7 +132,7 @@
 
         m_fileTable.replaceChild(newTBody, oldTBody);
         m_fileListDiv.style.display = displayStyle;
-        m_fileSelectDiv.style.display = displayStyle;
+        fileButtonDiv.style.display = displayStyle;
 
         showRenameButton = showRenameButton &&
                 fileState.files.every(function (fileInfo) {
@@ -221,6 +223,7 @@
                     }
 
                     m_model.setDirectory(entry);
+                    m_chooseDirectoryButton.blur();
                 }
             );
         });

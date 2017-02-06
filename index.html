@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="batchFileRenamer.css" rel="stylesheet">
+        <meta charset="utf-8">  
+        <link href="mui.css" rel="stylesheet">
+        <link href="batchFileRenamer.css" rel="stylesheet"> <!-- after mui.css -->
     </head>
     <body>
         <div id="main">
+            <header class="mui-appbar mui--z1">
+                <div class="mui-container">
+                    <table width="100%">
+                        <tr class="mui--appbar-height">
+                            <td id="appbarTitle" class="mui--text-title">Batch File Renamer</td>
+                            <td align="right">
+                                <ul class="mui-list--inline mui--text-body2">
+                                    <li>
+                                        <button id="chooseDirectoryButton" class="mui-btn mui-btn--appbar mui-btn--flat">
+                                            <img src="ic_folder_open_white_24px.svg"/>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </header>
             <fieldset>
             <legend>Files</legend>
-                <div id="fileSelectDiv">
-                    <nav>
-                        <button id="chooseDirectoryButton">Choose Directory</button>
-                    </nav>
-                    Path: <input type="text" id="filePathInput" readonly />
-                </div>
                 <div id="fileListDiv">
                     <table id="fileTable">
                         <thead>
@@ -26,7 +40,7 @@
                     </table>
                 </div>
                 <div id="fileButtonDiv">
-                    <button id="renameButton">Rename</button>
+                    <button id="renameButton" class="mui-btn mui-btn--raised mui-btn--primary">Rename</button>
                 </div>
             </fieldset>
             <fieldset>
@@ -97,5 +111,6 @@
         <script src="settings.js"></script>
         <script src="model.js"></script>
         <script src="view.js"></script>
+        <script srs="mui.js"></script>
     </body>
 </html>

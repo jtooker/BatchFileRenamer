@@ -1,3 +1,31 @@
 html {
     overflow-y: scroll;
 }
+
+/**
+ * Override mui.css
+ */
+
+body {
+    background-color: #FAFAFA; /* Gray 50 */
+}
+
+.mui--appbar-height td, tr {
+    padding: 0;
+}
+
+.mui-btn--appbar {
+    width: 64px;
+    height: 64px;
+    padding: 12px;
+    margin: 0;
+}
+
+.mui-btn--appbar > img {
+    height: 40px;
+    width: 40px;
+}
+
+.mui-list--inline {
+    margin-bottom: 0px;
+}
