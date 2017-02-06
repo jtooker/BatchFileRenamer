@@ -8,7 +8,7 @@
     <body>
         <div id="main">
             <header class="mui-appbar mui--z1">
-                <div class="mui-container">
+                <div class="mui-container-fluid">
                     <table width="100%">
                         <tr class="mui--appbar-height">
                             <td id="appbarTitle" class="mui--text-title">Batch File Renamer</td>
@@ -25,88 +25,91 @@
                     </table>
                 </div>
             </header>
-            <fieldset>
-            <legend>Files</legend>
-                <div id="fileListDiv">
-                    <table id="fileTable">
-                        <thead>
-                            <tr>
-                                 <th><input type="checkbox" id="masterCheckbox"/></th>
-                                 <th>Original Name</th>
-                                 <th>New Name</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div id="fileButtonDiv">
-                    <button id="renameButton" class="mui-btn mui-btn--raised mui-btn--primary">Rename</button>
-                </div>
-            </fieldset>
-            <fieldset>
-            <legend>Options</legend>
-                <p id="optionsLoadingP"><em>Loading</em></p>
-                <div id="optionsDiv">
-                    <div class="optionLine">
-                        Extension filter:
-                        <input type="text" name="extFilter" id="extFilter" />
+            <br />
+            <div class="mui-container-fluid">
+                <div class="mui-panel">
+                    <div class="mui--text-headline">Files</div>
+                    <div id="fileListDiv">
+                        <table id="fileTable">
+                            <thead>
+                                <tr>
+                                     <th><input type="checkbox" id="masterCheckbox"/></th>
+                                     <th>Original Name</th>
+                                     <th>New Name</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
-                    <div class="optionLine">
-                        <label>
-                            <input type="checkbox" id="prefixCheckbox"/>
-                            Prefix:
-                        </label>
-                        <input type="text" name="prefix" id="prefix" />
-                    </div>
-                    <div class="optionLine">
-                        <label>
-                            <input type="checkbox" id="postfixCheckbox"/>
-                            Postfix:
-                        </label>
-                        <input type="text" name="postfix" id="postfix" />
-                    </div>
-                    <div class="optionLine">
-                        Find:
-                        <input type="text" name="find" id="find" />
-                    </div>
-                    <div class="optionLine">
-                        Replace:
-                        <input type="text" name="replace" id="replace" />
-                    </div>
-                    <div class="optionLine">
-                        Case:
-                        <select id="caseComboBox">
-                            <option value="unchanged">UnChanGEd</option>
-                            <option value="uppercase">TO UPPER</option>
-                            <option value="lowercase">to lower</option>
-                            <option value="capitalize_words">Capitalize Words</option>
-                            <option value="capitalize_first_letter">Capitalize first letter</option>
-                        </select>
-                    </div>
-                    <div class="optionTitle">
-                        Extension Options:
-                    </div>
-                    <div class="optionLine">
-                        <label>
-                            <input type="checkbox" id="lowerExtCheckbox"/>
-                            Lowercase Extensions
-                        </label>
-                    </div>
-                    <div class="optionLine">
-                        <label>
-                            <input type="checkbox" id="upperExtCheckbox"/>
-                            Uppercase Extensions
-                        </label>
-                    </div>
-                    <div class="optionLine">
-                        <label>
-                            <input type="checkbox" id="extensionToCheckbox"/>
-                            Change Extensions to:
-                        </label>
-                        <input type="text" id="extensionsToTextInput" />
+                    <div id="fileButtonDiv">
+                        <button id="renameButton" class="mui-btn mui-btn--raised mui-btn--primary">Rename</button>
                     </div>
                 </div>
-            </fieldset>
+                <div class="mui-panel">
+                    <div class="mui--text-headline">Options</div>
+                    <p id="optionsLoadingP"><em>Loading</em></p>
+                    <div id="optionsDiv">
+                        <div class="optionLine">
+                            Extension filter:
+                            <input type="text" name="extFilter" id="extFilter" />
+                        </div>
+                        <div class="optionLine">
+                            <label>
+                                <input type="checkbox" id="prefixCheckbox"/>
+                                Prefix:
+                            </label>
+                            <input type="text" name="prefix" id="prefix" />
+                        </div>
+                        <div class="optionLine">
+                            <label>
+                                <input type="checkbox" id="postfixCheckbox"/>
+                                Postfix:
+                            </label>
+                            <input type="text" name="postfix" id="postfix" />
+                        </div>
+                        <div class="optionLine">
+                            Find:
+                            <input type="text" name="find" id="find" />
+                        </div>
+                        <div class="optionLine">
+                            Replace:
+                            <input type="text" name="replace" id="replace" />
+                        </div>
+                        <div class="optionLine">
+                            Case:
+                            <select id="caseComboBox">
+                                <option value="unchanged">UnChanGEd</option>
+                                <option value="uppercase">TO UPPER</option>
+                                <option value="lowercase">to lower</option>
+                                <option value="capitalize_words">Capitalize Words</option>
+                                <option value="capitalize_first_letter">Capitalize first letter</option>
+                            </select>
+                        </div>
+                        <div class="optionTitle">
+                            Extension Options:
+                        </div>
+                        <div class="optionLine">
+                            <label>
+                                <input type="checkbox" id="lowerExtCheckbox"/>
+                                Lowercase Extensions
+                            </label>
+                        </div>
+                        <div class="optionLine">
+                            <label>
+                                <input type="checkbox" id="upperExtCheckbox"/>
+                                Uppercase Extensions
+                            </label>
+                        </div>
+                        <div class="optionLine">
+                            <label>
+                                <input type="checkbox" id="extensionToCheckbox"/>
+                                Change Extensions to:
+                            </label>
+                            <input type="text" id="extensionsToTextInput" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div> <!-- main -->
         <script src="settings.js"></script>
         <script src="model.js"></script>
