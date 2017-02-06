@@ -122,8 +122,8 @@
         populateMasterCheckbox(fileState.files);
 
         m_appbarTitle.innerHTML = fileState.directoryPath === ""
-                ? "Batch File Renamer"
-                : fileState.directoryPath;
+            ? "Batch File Renamer"
+            : fileState.directoryPath;
 
         fileState.files.forEach(function (fileInfo) {
             row = newTBody.insertRow();
@@ -132,7 +132,7 @@
 
         m_fileTable.replaceChild(newTBody, oldTBody);
         m_fileListDiv.style.display = displayStyle;
-        fileButtonDiv.style.display = displayStyle;
+        m_fileButtonDiv.style.display = displayStyle;
 
         showRenameButton = showRenameButton &&
                 fileState.files.every(function (fileInfo) {
