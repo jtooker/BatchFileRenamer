@@ -2,6 +2,18 @@ html {
     overflow-y: scroll;
 }
 
+.problem {
+    color: #F44336; /* Red 500 */
+}
+
+.no-change {
+    color: #9E9E9E; /* Gray 500 */
+}
+
+tr.selected-row {
+    background-color: #E3F2FD; /* Blue 50 */
+}
+
 /**
  * Override mui.css
  */
@@ -27,5 +39,23 @@ body {
 }
 
 .mui-list--inline {
-    margin-bottom: 0px;
+    margin-bottom: 0;
+}
+
+.no-side-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.panel-side-padding {
+    padding-left: 15px;  /* same as mui-panel margin */
+    padding-right: 15px;
+}
+
+.mui-table {
+    border-spacing: 0;
+}
+
+.mui-table > tbody > tr:hover {
+    background-color: #F5F5F5; /* gray 100 */
 }

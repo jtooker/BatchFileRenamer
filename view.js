@@ -47,24 +47,24 @@
     }
 
     // private -----------------------------------------------------------------
-    function calculatePreviewRowStyle(fileInfo) {
-        function calculateColor() {
-            if (fileInfo.error !== undefined) {
-                return "red";
-            }
-            if (fileInfo.fileName === fileInfo.newName) {
-                return "gray";
-            }
-        }
-        var color = calculateColor();
+    function calculatePreviewRowClass(fileInfo) {
+        var classes = [];
 
-        return color === undefined
-            ? ""
-            : "color: " + color;
+        if (fileInfo.error !== undefined) {
+            classes.push("problem");
+        } else if (fileInfo.fileName === fileInfo.newName) {
+            classes.push("no-change");
+        }
+
+        if (fileInfo.checked) {
+            classes.push("selected-row");
+        }
+
+        return classes.join(" ");
     }
 
     // private -----------------------------------------------------------------
-    function createFileEntryRow(fileInfo, row) {
+    function prepareFileEntryRow(fileInfo, row) {
         var cell;
         var checkbox;
 
@@ -75,7 +75,7 @@
             });
         }
 
-        row.style = calculatePreviewRowStyle(fileInfo); // TODO: replace by css class
+        row.className = calculatePreviewRowClass(fileInfo);
         row.title = fileInfo.error || "";
 
         checkbox = document.createElement("input");
@@ -127,7 +127,7 @@
 
         fileState.files.forEach(function (fileInfo) {
             row = newTBody.insertRow();
-            createFileEntryRow(fileInfo, row);
+            prepareFileEntryRow(fileInfo, row);
         });
 
         m_fileTable.replaceChild(newTBody, oldTBody);
